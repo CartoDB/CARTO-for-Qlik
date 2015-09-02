@@ -309,8 +309,6 @@ define(["./lib/leaflet", "./cartocss", "./config", "text!./cartodb.css", "text!.
             } else {
                 $('.container-timeline').hide();                
             }
-            
-//            this.
         }
     }
 });

@@ -1,0 +1,206 @@
+#map, html, body {
+    width: 100%;
+    height: 95%;
+    padding: 0;
+    margin: 0;
+}
+#control {
+    display:inline-block;
+    z-index: 10000;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 4px rgba(0, 0, 0, .2);
+    padding: 8px;
+    cursor: pointer;
+    float: left;
+    display: inline;
+}
+#control:hover {
+    background: #f5f5f5;
+}
+#control span {
+    display: block;
+    width: 12px;
+    height: 12px;
+    vertical-align: middle;
+    position:relative
+}
+#control span.pause:before {
+    content:"";
+    position: absolute;
+    display: block;
+    height: 10px;
+    width: 3px;
+    background: #666;
+    left: 2px;
+    top: 1px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+#control span.pause:after {
+    content:"";
+    position: absolute;
+    display: block;
+    height: 10px;
+    width: 3px;
+    background: #666;
+    right: 1px;
+    top: 1px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+#control span.play:before {
+    content:"";
+    position: absolute;
+    display: block;
+    height: 0px;
+    width: 0px;
+    border: 6px solid transparent;
+    border-left: 8px solid #666;
+    left: 3px;
+}
+
+.timeline-inner {
+    cursor: pointer;
+    border-radius: 50px;
+    height: 6px;
+    background: #fff;
+    display: block;
+    margin-left: 46px;
+    margin-top: 10px;
+}
+.timeline-progress{
+    display: inline-block;
+    border-radius: 50px;
+    height: 6px;
+    background: #0090D7;
+    vertical-align: top;
+    position: relative;
+}
+.timeline-progress > span {
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    top: -6px;
+    right: 0;
+    background: #FFFFFF;
+    display: inline-block;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, .2);
+    box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.30);
+}
+#filter *:focus {
+  outline: none;
+}
+#filter  p {
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 12px;
+    margin-right: 4px;
+    margin-top: 12px;
+}
+#filter input[type=checkbox] {
+    margin-top: 12px;
+  cursor: pointer;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+}
+#filter input[type=checkbox].toogle {
+  border: 0;
+  box-shadow: inset 0 1px 0 rgba(0, 0, 0, .1);
+  background: #ddd;
+  border-radius: 50px;
+  width: 36px;
+  height: 20px;
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+}
+#filter input[type=checkbox].toogle:before {
+  content: "";
+  top: 4px;
+  left: 4px;
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #fff;
+  border-radius: 50%;
+  position: absolute;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, .1);
+}
+#filter input[type=checkbox]:checked.toogle {
+  background: #8FB83F
+}
+#filter input[type=checkbox]:checked.toogle:before {
+  left: auto;
+  right: 4px;
+}
+#container {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    height: 50px;
+    background: rgba(0, 0, 0, .8);
+    z-index: 1000;
+    width: 100%;
+    overflow: hidden;
+    border-top: 1px solid #000;
+}
+ #container * {
+    box-sizing: border-box;
+ }
+#container > ul {
+    padding: 0;
+    margin: 0;
+}
+#container li:first-child {
+    margin-left: 0;
+}
+#container li {
+    list-style-type: none;
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0;
+    margin-left: -4px;
+}
+.container-filter {
+    width: 15%;
+    height: 50px;
+}
+.container-action {
+    width: 15%;
+    padding: 0;
+}
+.container-timeline {
+    width: 70%;
+    padding: 10px 20px 0 20px;
+    height: 50px;
+    border-left: 1px solid rgba(255, 255, 255, .2);
+    border-right: 1px solid rgba(255, 255, 255, .2);
+}
+.ButtonAction {
+    text-align: center;
+    margin: 0;
+}
+.ButtonAction > a {
+    display: inline-block;
+    color: #fff !important;
+    text-align: center;
+    text-decoration: none;
+}
+.ButtonAction > a:hover {
+    text-decoration: underline;
+}
+.container-filter {
+    text-align: center;
+    padding-top: 4px;
+}
+.container-filter p {
+    display: inline-block;
+    vertical-align: middle;
+    color: #fff;
+}

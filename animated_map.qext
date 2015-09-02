@@ -1,0 +1,9 @@
+{
+	"name": "Animated map",
+	"description": "Torque animated map",
+	"icon": "map",
+	"type": "visualization",
+	"version": 0.1,
+	"preview": "map",
+	"author": "Daniel Carrión"
+}

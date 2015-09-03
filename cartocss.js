@@ -97,14 +97,19 @@ define(function () {
                     }
 
                     for (var i = 0; i < torqueCategories.length; i++) {
-                        if (categoryNames && categoryNames[i] != undefined) {
-                            torqueCategories[i].name = categoryNames[i];
+                        var torqueCategory = torqueCategories[i];
+                        if (categoryNames && categoryNames[torqueCategory.value] != undefined) {
+                            torqueCategory.name = categoryNames[torqueCategory.value];
                         }
-                        if (categoryColors && categoryColors[i] != undefined) {
-                            torqueCategories[i].color = categoryColors[i];  
+                        if (categoryColors && categoryColors[torqueCategory.value] != undefined) {
+                            torqueCategory.color = categoryColors[torqueCategory.value];
                         }
-                        if (torqueCategories[i].color.length < 7) torqueCategories[i].color = "#FFFFFF"; //TODO
-                        css += '\n#layer[value=' + torqueCategories[i].value + '] { marker-fill: ' + torqueCategories[i].color + '; }';
+
+                        if (typeof(torqueCategory.value) == "number") {
+                            css += '\n#layer[value=' + torqueCategory.value + '] { marker-fill: ' + torqueCategory.color + '; }';
+                        } else {
+                            css += "\n#layer[value='" + torqueCategory.value + "'] { marker-fill: " + torqueCategory.color + "; }";
+                        }
                     }
                 }
                 return css;

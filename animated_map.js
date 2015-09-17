@@ -12,7 +12,7 @@
  *   - Two dimensions (location and time) and a measure: same as above, it only makes real sense for
  *     category maps.
  */
-define(["./lib/leaflet", "./cartocss", "./config", "text!./cartodb.css", "text!./torque.css", "text!./lib/leaflet.css", "./lib/torque.full.uncompressed"], function (L, cartocss, config, cartodbCSS, cssTorque, cssLeaflet, torque) {
+define(["./lib/leaflet", "./cartocss", "./config", "text!./cartodb.css", "text!./torque.css", "text!./lib/leaflet.css", "./lib/torque.full"], function (L, cartocss, config, cartodbCSS, cssTorque, cssLeaflet, torque) {
     $("<style>").html(cssTorque).appendTo("head");
     $("<style>").html(cssLeaflet).appendTo("head");
     $("<style>").html(cartodbCSS).appendTo("head");
@@ -118,14 +118,15 @@ define(["./lib/leaflet", "./cartocss", "./config", "text!./cartodb.css", "text!.
             // being added to the app or on page reload.
             if (!$element.html()) {
                 $element.html('' +
+                    //'<div id="time"></div>' +
                     '<div id="map"></div>' +
                     '<div id="container">' +
                     '    <ul>' +
                     '        <li class="container-filter" id="filter">' +
-                    '            <p>Filter TODO</p>' +
+                    '            <p>Area filter</p>' +
                     '            <input type="checkbox" class="toogle" name="dynamic_filter" id="dynamic_filter">' +
                     '        </li>' +
-                    '        <li class="container-timeline" style="display:none;">' +
+                    '        <li class="container-timeline">' +
                     '            <div id="control"><span class="pause"></span></div>' +
                     '            <div class="timeline-inner">' +
                     '                <div class="timeline-progress">' +
@@ -134,7 +135,10 @@ define(["./lib/leaflet", "./cartocss", "./config", "text!./cartodb.css", "text!.
                     '            </div>' +
                     '        </li>' +
                     '        <li class="container-action">' +
-                    '            <p class="ButtonAction"><a href="#">Analyze your data</a></p>' +
+                    '            <a href="#">' +
+                    '                <span>Analyze your data</span>' +
+                    '                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAAclJREFUSA3VlzFLA0EQhe80BC2sRNDSLp2dIApaCVb+BC1tbBQrW4vUIthKWsHCSrESLUQsRdBCsDBJYUARC0E9vwm33uVyyc1uSIIDj5mdnZmX3Z3sJl4QBHlQBGXQbREO4cp7odFtwmT9oo+n7HneBOilVIQ46CWj4RowRq/1vyU+YaemwIP1jiXbzWJ8RuygEKLXLfLqoZ00V8H3/fuQeAT9DESrxPaMf6h6DE4NqbBgv6MOxNaKDfE5RWWVy+irFII9fC8p/nSX8mwOicuZCthLYMiM4xr/BsgUaYwseSWg6ezwjQM/Tio2vhy4Bm1Fs9U34Rk2cOCrgqZbD98XgfsNwSkDDfFbSl6W6y4rQEOsb5iIbSwy0y0N8QqHtZqe3tI723LGTLTtgGjyE3PR5CQ1c3JzLYgfPQwyf1RoViz18uCIgjMyiAu+bcaTYC7076Cz33cSbaRGcCEkkNVtgTVwCUbBJlCJy139CLG8SB+gBuS+vgDzYBqoxIVYCsv39BbsgvoLhbYS7Rkni8oqq+A7OaEd/92/2oQw7gktj780nZO4brUTWTzJdavjNZzsvhJXnD5yZ0kVWXGpsxpO2SW5ffryp+0XLlaMejDd+O4AAAAASUVORK5CYII="/>' +
+                    '            </a>' +
                     '        </li>' +
                     '    </ul>' +
                     '</div>');
@@ -150,7 +154,6 @@ define(["./lib/leaflet", "./cartocss", "./config", "text!./cartodb.css", "text!.
                 // This takes care of narrowing the data filter on Qlik based on the current bounding box.
                 updateSelections = function () {
                     if ($("#dynamic_filter").is(':checked')) {
-                        console.log("ZOOM");
                         if (event) {
                             currentZoomLevel = map.getZoom();
                         }
@@ -247,7 +250,7 @@ define(["./lib/leaflet", "./cartocss", "./config", "text!./cartodb.css", "text!.
                 }
 
                 basemapLayer = L.tileLayer('http://{s}.basemaps.cartocdn.com/' + mapOptions.basemap + '_all/{z}/{x}/{y}.png', {
-                    attribution: 'CartoDB TODO'
+                    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
                 });
                 map.addLayer(basemapLayer);
             }
@@ -258,13 +261,14 @@ define(["./lib/leaflet", "./cartocss", "./config", "text!./cartodb.css", "text!.
                 steps: animated ? layout.steps : 1,
                 animationDuration: layout.animationDuration,
                 data_aggregation: layout.cumulative ? "cumulative" : undefined,
-                countby: layout.torqueType == "categories" ? "CDB_Math_Mode(torque_category)" : undefined,
-                cartocss: cartocss.get(layout.torqueType, layout.markerWidth, layout.markerFill)
+                countby: layout.torqueType == "categories" ? "CDB_Math_Mode(value)" : undefined,
+                cartocss: cartocss.get(layout.torqueType, layout, animated)
             });
             map.addLayer(torqueLayer);
 
             updateSlider = function (event) {
                 if (animated) {
+                    $("#time").html(event.time);
                     var width = parseInt(event.step * 100 / parseInt(layout.steps));
                     $(".timeline-progress").width(width + "%");
                 }
@@ -272,27 +276,46 @@ define(["./lib/leaflet", "./cartocss", "./config", "text!./cartodb.css", "text!.
             torqueLayer.on('change:time', updateSlider);
 
             // This step can actually be removed, as it takes time and it's only made for code readability's sake.
+            var dataBounds = [[], []];
             var torqueData = data.map(function (d) {
-                var lonlat = JSON.parse(d[locationIdx].qText);
-                return {
-                    "date": animated ? d[dateIdx].qText : 0,
-                    "latitude": parseFloat(lonlat[1]),
-                    "longitude": parseFloat(lonlat[0]),
-                    "value": hasValue ? (d[valueIdx].qNum == NaN || d[valueIdx].qNum == "NaN" ? d[valueIdx].qText : d[valueIdx].qNum) : 1
+                try {
+                    var lonlat = JSON.parse(d[locationIdx].qText);
+                    var longitude = parseFloat(lonlat[0]);
+                    var latitude = parseFloat(lonlat[1]);
+                    if (!layout.zoom && !layout.centerLat && !layout.centerLon) {
+                        if (dataBounds[1][0] == undefined || latitude > dataBounds[1][0]) dataBounds[1][0] = latitude;
+                        if (dataBounds[0][0] == undefined || latitude < dataBounds[0][0]) dataBounds[0][0] = latitude;
+                        if (dataBounds[1][1] == undefined || longitude > dataBounds[1][1]) dataBounds[1][1] = longitude;
+                        if (dataBounds[0][1] == undefined || longitude < dataBounds[0][1]) dataBounds[0][1] = longitude;
+                    }
+                    return {
+                        "date": animated ? d[dateIdx].qText : 0,
+                        "latitude": latitude,
+                        "longitude": longitude,
+                        "value": hasValue ? (d[valueIdx].qNum == NaN || d[valueIdx].qNum == "NaN" ? d[valueIdx].qText : d[valueIdx].qNum) : 1
+                    }
+                } catch (err) {
+                    return;
                 }
             });
+
+            if (!layout.zoom && !layout.centerLat && !layout.centerLon) {
+                map.fitBounds(dataBounds);
+            }
 
             // Actually loading data into Torque.
             for (var i = 0; i < torqueData.length; i++) {
                 var point = torqueData[i];
-                torqueLayer.provider.addPoint(point.latitude, point.longitude, point.date, point.value);
+                if (point) {
+                    torqueLayer.provider.addPoint(point.latitude, point.longitude, point.date, point.value);
+                }
             }
 
             // If this is a category map, we need to update the CartoCSS and create a legend
             $(".cartodb-legend-stack").remove();
             if (layout.torqueType == "categories" && hasValue) {
                 var torqueCategories = torqueLayer.provider.getCategories();
-                torqueLayer.setCartoCSS(cartocss.get(layout.torqueType, layout.markerWidth, layout.markerFill, torqueCategories, layout.categoryNames, layout.categoryColors));
+                torqueLayer.setCartoCSS(cartocss.get(layout.torqueType, layout, animated, torqueCategories, layout.categoryNames, layout.categoryColors));
                 var legendHTML = '<div class="cartodb-legend-stack" style="display: block;"><div class="cartodb-legend category" style="display: block;"><ul>';
                 for (var i = 0; i < torqueCategories.length; i++) {
                     legendHTML += '<li><div class="bullet" style="background: ' + torqueCategories[i].color + '"></div>' + torqueCategories[i].name + '</li>';
@@ -305,9 +328,12 @@ define(["./lib/leaflet", "./cartocss", "./config", "text!./cartodb.css", "text!.
             torqueLayer.provider.setReady();
 
             if (animated) {
-                $('.container-timeline').show();
+                torqueLayer.play();
+                $('.timeline-inner').show();
+                $('#control').show();
             } else {
-                $('.container-timeline').hide();                
+                $('.timeline-inner').hide();
+                $('#control').hide();
             }
         }
     }

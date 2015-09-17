@@ -63,7 +63,6 @@
 }
 
 .timeline-inner {
-    cursor: pointer;
     border-radius: 50px;
     height: 6px;
     background: #fff;
@@ -91,6 +90,7 @@
     border: 1px solid rgba(0, 0, 0, .2);
     box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.30);
 }
+
 #filter *:focus {
   outline: none;
 }
@@ -99,10 +99,8 @@
     vertical-align: middle;
     font-size: 12px;
     margin-right: 4px;
-    margin-top: 12px;
 }
 #filter input[type=checkbox] {
-    margin-top: 12px;
   cursor: pointer;
   -webkit-appearance: none;
      -moz-appearance: none;
@@ -138,21 +136,19 @@
   left: auto;
   right: 4px;
 }
+
 #container {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    left: 0;
     height: 50px;
     background: rgba(0, 0, 0, .8);
-    z-index: 1000;
     width: 100%;
     overflow: hidden;
     border-top: 1px solid #000;
+    font-family: Arial, Helvetica;
+    font-size: 12px;
 }
  #container * {
     box-sizing: border-box;
- }
+}
 #container > ul {
     padding: 0;
     margin: 0;
@@ -162,38 +158,36 @@
 }
 #container li {
     list-style-type: none;
-    display: inline-block;
-    vertical-align: middle;
+    float: left;
     margin: 0;
-    margin-left: -4px;
 }
 .container-filter {
-    width: 15%;
+    width: 20%;
     height: 50px;
-}
-.container-action {
-    width: 15%;
     padding: 0;
 }
+.container-action {
+    width: 20%;
+    padding: 0;
+    float: right;
+    text-align: center;
+}
+.container-action a {
+    color: #fff;
+    text-decoration: none;
+    line-height: 47px;
+}
+.container-action img {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 8px;
+}
 .container-timeline {
-    width: 70%;
+    width: 60%;
     padding: 10px 20px 0 20px;
     height: 50px;
     border-left: 1px solid rgba(255, 255, 255, .2);
     border-right: 1px solid rgba(255, 255, 255, .2);
-}
-.ButtonAction {
-    text-align: center;
-    margin: 0;
-}
-.ButtonAction > a {
-    display: inline-block;
-    color: #fff !important;
-    text-align: center;
-    text-decoration: none;
-}
-.ButtonAction > a:hover {
-    text-decoration: underline;
 }
 .container-filter {
     text-align: center;
@@ -203,4 +197,5 @@
     display: inline-block;
     vertical-align: middle;
     color: #fff;
+    line-height: 47px;
 }

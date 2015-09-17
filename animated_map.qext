@@ -1,6 +1,6 @@
 {
-	"name": "Animated map",
-	"description": "Torque animated map",
+	"name": "CartoQlik",
+	"description": "CartoDB Torque map with local data",
 	"icon": "map",
 	"type": "visualization",
 	"version": 0.1,

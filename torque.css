@@ -1,8 +1,16 @@
-#map, html, body {
+html, body {
     width: 100%;
-    height: 95%;
+    height: 100%;
+    min-height: 100%;
     padding: 0;
     margin: 0;
+}
+#map {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 60px;
+    left: 0;
 }
 #control {
     display:inline-block;
@@ -51,6 +59,7 @@
     -moz-border-radius: 4px;
     border-radius: 4px;
 }
+
 #control span.play:before {
     content:"";
     position: absolute;
@@ -60,8 +69,8 @@
     border: 6px solid transparent;
     border-left: 8px solid #666;
     left: 3px;
-}
 
+}
 .timeline-inner {
     border-radius: 50px;
     height: 6px;
@@ -98,7 +107,7 @@
     display: inline-block;
     vertical-align: middle;
     font-size: 12px;
-    margin-right: 4px;
+    margin: 0 4px 0 0 ;
 }
 #filter input[type=checkbox] {
   cursor: pointer;
@@ -138,17 +147,21 @@
 }
 
 #container {
-    height: 50px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 30px;
     background: rgba(0, 0, 0, .8);
     width: 100%;
     overflow: hidden;
-    border-top: 1px solid #000;
     font-family: Arial, Helvetica;
     font-size: 12px;
+    padding: 15px 0;
 }
- #container * {
+#container * {
     box-sizing: border-box;
-}
+ }
 #container > ul {
     padding: 0;
     margin: 0;
@@ -158,7 +171,6 @@
 }
 #container li {
     list-style-type: none;
-    float: left;
     margin: 0;
 }
 .container-filter {
@@ -167,26 +179,23 @@
     padding: 0;
 }
 .container-action {
-    width: 20%;
-    padding: 0;
+    padding: 0 30px;
     float: right;
     text-align: center;
+    opacity: .9
 }
 .container-action a {
     color: #fff;
     text-decoration: none;
-    line-height: 47px;
 }
 .container-action img {
     display: inline-block;
     vertical-align: middle;
-    margin-left: 8px;
+    margin-right: 8px;
 }
 .container-timeline {
-    width: 60%;
-    padding: 10px 20px 0 20px;
-    height: 50px;
-    border-left: 1px solid rgba(255, 255, 255, .2);
+    overflow: hidden;
+    padding: 0 30px;
     border-right: 1px solid rgba(255, 255, 255, .2);
 }
 .container-filter {
@@ -197,5 +206,165 @@
     display: inline-block;
     vertical-align: middle;
     color: #fff;
-    line-height: 47px;
+}
+.mapLayer {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    z-index: 10;
+    background: #FFFFFF;
+    border: 1px solid rgba(0,0,0,0.20);
+    box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.20);
+    border-radius: 4px;
+    padding: 10px 20px;
+}
+.timeline-date {
+    width: 120px;
+    text-align: center;
+    float: right;
+    margin-left: 20px;
+    display: none;
+}
+.timeline-date p {
+    margin: 6px 0 0 0;
+    font-family: Arial, Helvetica;
+    font-size: 12px;
+    color: #fff;
+}
+.timeline-bar {
+    overflow: hidden;
+    display: none;
+}
+/* temporal spinner */
+.Loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 100;
+  width: 200px;
+  margin: -50px 0 0 -100px;
+  text-align: center;
+}
+.Spinner {
+  display: inline-block;
+  width: 100%;
+  border-top: 2px solid #ddd;
+  border-right: 2px solid #ddd;
+  border-bottom: 2px solid #ddd;
+  border-left: 2px solid #0090d7;
+  -webkit-animation: load8 1.1s infinite linear;
+     -moz-animation: load8 1.1s infinite linear;
+      -ms-animation: load8 1.1s infinite linear;
+       -o-animation: load8 1.1s infinite linear;
+          animation: load8 1.1s infinite linear;
+
+  -khtml-animation: load8 1.1s infinite linear;
+}
+.Spinner,
+.Spinner:after {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+
+@-webkit-keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+       -moz-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+         -o-transform: rotate(0deg);
+            transform: rotate(0deg);
+
+    -khtml-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+       -moz-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+         -o-transform: rotate(360deg);
+            transform: rotate(360deg);
+
+    -khtml-transform: rotate(360deg);
+  }
+}
+@-moz-keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+       -moz-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+         -o-transform: rotate(0deg);
+            transform: rotate(0deg);
+
+    -khtml-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+       -moz-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+         -o-transform: rotate(360deg);
+            transform: rotate(360deg);
+
+    -khtml-transform: rotate(360deg);
+  }
+}
+@-ms-keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+       -moz-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+         -o-transform: rotate(0deg);
+            transform: rotate(0deg);
+
+    -khtml-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+       -moz-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+         -o-transform: rotate(360deg);
+            transform: rotate(360deg);
+
+    -khtml-transform: rotate(360deg);
+  }
+}
+@-o-keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+       -moz-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+         -o-transform: rotate(0deg);
+            transform: rotate(0deg);
+
+    -khtml-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+       -moz-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+         -o-transform: rotate(360deg);
+            transform: rotate(360deg);
+
+    -khtml-transform: rotate(360deg);
+  }
+}
+@keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+       -moz-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+         -o-transform: rotate(0deg);
+            transform: rotate(0deg);
+
+    -khtml-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+       -moz-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+         -o-transform: rotate(360deg);
+            transform: rotate(360deg);
+
+    -khtml-transform: rotate(360deg);
+  }
 }

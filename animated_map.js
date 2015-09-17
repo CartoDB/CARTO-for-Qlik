@@ -29,7 +29,11 @@ define(["./lib/leaflet", "./cartocss", "./config", "text!./cartodb.css", "text!.
     // To be able to bind/unbind callback functions.
     var updateSlider;
     var updateSelections;
-    
+    var hideSpinner;
+
+    // Used when the extension reloads and want to keep the zoom level and position.
+    var forceMapView;
+
     var dragging = false;
     
     return {
@@ -66,6 +70,8 @@ define(["./lib/leaflet", "./cartocss", "./config", "text!./cartodb.css", "text!.
 
         // Object rendering
         paint: function ($element, layout, dontRedraw) {
+            $("#spinner").show();
+
             var self = this;
 
             // Force map redraw, necessary to deal with map size / zoom changes done by the user on Qlik's UI.
@@ -118,31 +124,39 @@ define(["./lib/leaflet", "./cartocss", "./config", "text!./cartodb.css", "text!.
             // being added to the app or on page reload.
             if (!$element.html()) {
                 $element.html('' +
-                    //'<div id="time"></div>' +
-                    '<div id="map"></div>' +
+                    '<div id="spinner" class="Loader">' +
+                    '    <div class="Spinner"></div>' +
+                    '</div>' +
+                    '<div id="map">' +
+                    '    <div class="mapLayer" id="filter">' +
+                    '        <p>Area filter</p>' +
+                    '        <input type="checkbox" class="toogle" name="dynamic_filter" id="dynamic_filter">' +
+                    '    </div>' +
+                    '</div>' +
                     '<div id="container">' +
                     '    <ul>' +
-                    '        <li class="container-filter" id="filter">' +
-                    '            <p>Area filter</p>' +
-                    '            <input type="checkbox" class="toogle" name="dynamic_filter" id="dynamic_filter">' +
+                    '        <li class="container-action">' +
+                    '            <a href="https://cartodb.com/solutions/qlik">' +
+                    '                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAAclJREFUSA3VlzFLA0EQhe80BC2sRNDSLp2dIApaCVb+BC1tbBQrW4vUIthKWsHCSrESLUQsRdBCsDBJYUARC0E9vwm33uVyyc1uSIIDj5mdnZmX3Z3sJl4QBHlQBGXQbREO4cp7odFtwmT9oo+n7HneBOilVIQ46CWj4RowRq/1vyU+YaemwIP1jiXbzWJ8RuygEKLXLfLqoZ00V8H3/fuQeAT9DESrxPaMf6h6DE4NqbBgv6MOxNaKDfE5RWWVy+irFII9fC8p/nSX8mwOicuZCthLYMiM4xr/BsgUaYwseSWg6ezwjQM/Tio2vhy4Bm1Fs9U34Rk2cOCrgqZbD98XgfsNwSkDDfFbSl6W6y4rQEOsb5iIbSwy0y0N8QqHtZqe3tI723LGTLTtgGjyE3PR5CQ1c3JzLYgfPQwyf1RoViz18uCIgjMyiAu+bcaTYC7076Cz33cSbaRGcCEkkNVtgTVwCUbBJlCJy139CLG8SB+gBuS+vgDzYBqoxIVYCsv39BbsgvoLhbYS7Rkni8oqq+A7OaEd/92/2oQw7gktj780nZO4brUTWTzJdavjNZzsvhJXnD5yZ0kVWXGpsxpO2SW5ffryp+0XLlaMejDd+O4AAAAASUVORK5CYII="/>' +
+                    '                <span>Analyze your data</span>' +
+                    '            </a>' +
                     '        </li>' +
                     '        <li class="container-timeline">' +
-                    '            <div id="control"><span class="pause"></span></div>' +
-                    '            <div class="timeline-inner">' +
-                    '                <div class="timeline-progress">' +
-                    '                    <span></span>' +
+                    '            <div class="timeline-date">' +
+                    '                <p></p>' +
+                    '            </div>' +
+                    '            <div class="timeline-bar">' +
+                    '                <div id="control"><span class="pause"></span></div>' +
+                    '                <div class="timeline-inner">' +
+                    '                    <div class="timeline-progress">' +
+                    '                        <span></span>' +
+                    '                    </div>' +
                     '                </div>' +
                     '            </div>' +
                     '        </li>' +
-                    '        <li class="container-action">' +
-                    '            <a href="#">' +
-                    '                <span>Analyze your data</span>' +
-                    '                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAAclJREFUSA3VlzFLA0EQhe80BC2sRNDSLp2dIApaCVb+BC1tbBQrW4vUIthKWsHCSrESLUQsRdBCsDBJYUARC0E9vwm33uVyyc1uSIIDj5mdnZmX3Z3sJl4QBHlQBGXQbREO4cp7odFtwmT9oo+n7HneBOilVIQ46CWj4RowRq/1vyU+YaemwIP1jiXbzWJ8RuygEKLXLfLqoZ00V8H3/fuQeAT9DESrxPaMf6h6DE4NqbBgv6MOxNaKDfE5RWWVy+irFII9fC8p/nSX8mwOicuZCthLYMiM4xr/BsgUaYwseSWg6ezwjQM/Tio2vhy4Bm1Fs9U34Rk2cOCrgqZbD98XgfsNwSkDDfFbSl6W6y4rQEOsb5iIbSwy0y0N8QqHtZqe3tI723LGTLTtgGjyE3PR5CQ1c3JzLYgfPQwyf1RoViz18uCIgjMyiAu+bcaTYC7076Cz33cSbaRGcCEkkNVtgTVwCUbBJlCJy139CLG8SB+gBuS+vgDzYBqoxIVYCsv39BbsgvoLhbYS7Rkni8oqq+A7OaEd/92/2oQw7gktj780nZO4brUTWTzJdavjNZzsvhJXnD5yZ0kVWXGpsxpO2SW5ffryp+0XLlaMejDd+O4AAAAASUVORK5CYII="/>' +
-                    '            </a>' +
-                    '        </li>' +
                     '    </ul>' +
                     '</div>');
-                    
+
                 // This is the only moment where we want to instantiate a new map.
                 if (map && updateSelections) {
                     map.off('zoomend', updateSelections);
@@ -154,8 +168,11 @@ define(["./lib/leaflet", "./cartocss", "./config", "text!./cartodb.css", "text!.
                 // This takes care of narrowing the data filter on Qlik based on the current bounding box.
                 updateSelections = function () {
                     if ($("#dynamic_filter").is(':checked')) {
-                        if (event) {
-                            currentZoomLevel = map.getZoom();
+                        var center = map.getCenter();
+                        forceMapView = {
+                            centerLat: center.lat,
+                            centerLon: center.lng,
+                            zoom: map.getZoom()
                         }
 
                         var mapBounds = map.getBounds();
@@ -172,10 +189,17 @@ define(["./lib/leaflet", "./cartocss", "./config", "text!./cartodb.css", "text!.
                             }
                         }
 
-                        self.backendApi.selectValues(locationIdx, points, true);
+                        self.backendApi.selectValues(locationIdx, points, false);
                     }
                 }
                 map.on('zoomend', updateSelections);
+
+                // Make filter do its job simply by clicking on the filter button.
+                $("#dynamic_filter").click(function () {
+                    if ($(this).is(':checked')) {
+                        updateSelections();
+                    }
+                });
 
                 // Play / pause button.
                 $('#control').click(function () {
@@ -230,18 +254,10 @@ define(["./lib/leaflet", "./cartocss", "./config", "text!./cartodb.css", "text!.
             if (torqueLayer) {
                 map.removeLayer(torqueLayer);
                 torqueLayer.off('change:time', updateSlider);
+                torqueLayer.off('tilesLoaded', hideSpinner);
                 torqueLayer = null;
             }
 
-            // We keep track of configured lat, lon and zoom to only reset the map on Qlik editor changes, not if the user simply
-            // uses the map's controls.
-            if (mapOptions.centerLat != layout.centerLat || mapOptions.centerLon != layout.centerLon || mapOptions.zoom != layout.zoom) {
-                mapOptions.centerLat = layout.centerLat;
-                mapOptions.centerLon = layout.centerLon;
-                mapOptions.zoom = layout.zoom;
-                map.setView([mapOptions.centerLat, mapOptions.centerLon], mapOptions.zoom);
-            }
- 
             if (mapOptions.basemap != layout.basemap) {
                 mapOptions.basemap = layout.basemap;
 
@@ -268,12 +284,17 @@ define(["./lib/leaflet", "./cartocss", "./config", "text!./cartodb.css", "text!.
 
             updateSlider = function (event) {
                 if (animated) {
-                    $("#time").html(event.time);
+                    $(".timeline-date p").html(event.time.toLocaleString());
                     var width = parseInt(event.step * 100 / parseInt(layout.steps));
                     $(".timeline-progress").width(width + "%");
                 }
             }
             torqueLayer.on('change:time', updateSlider);
+
+            hideSpinner = function () {
+                $("#spinner").hide();
+            }
+            torqueLayer.on('tilesLoaded', hideSpinner);
 
             // This step can actually be removed, as it takes time and it's only made for code readability's sake.
             var dataBounds = [[], []];
@@ -299,8 +320,21 @@ define(["./lib/leaflet", "./cartocss", "./config", "text!./cartodb.css", "text!.
                 }
             });
 
-            if (!layout.zoom && !layout.centerLat && !layout.centerLon) {
+            // We keep track of configured lat, lon and zoom to only reset the map on Qlik editor changes, not if the user simply
+            // uses the map's controls.
+            if (forceMapView) {
+                mapOptions.centerLat = forceMapView.centerLat;
+                mapOptions.centerLon = forceMapView.centerLon;
+                mapOptions.zoom = forceMapView.zoom;
+                forceMapView = false;
+                map.setView([mapOptions.centerLat, mapOptions.centerLon], mapOptions.zoom);
+            } else if (!layout.zoom && !layout.centerLat && !layout.centerLon) {
                 map.fitBounds(dataBounds);
+            } else if (mapOptions.centerLat != layout.centerLat || mapOptions.centerLon != layout.centerLon || mapOptions.zoom != layout.zoom) {
+                mapOptions.centerLat = layout.centerLat;
+                mapOptions.centerLon = layout.centerLon;
+                mapOptions.zoom = layout.zoom;
+                map.setView([mapOptions.centerLat, mapOptions.centerLon], mapOptions.zoom);
             }
 
             // Actually loading data into Torque.
@@ -329,11 +363,11 @@ define(["./lib/leaflet", "./cartocss", "./config", "text!./cartodb.css", "text!.
 
             if (animated) {
                 torqueLayer.play();
-                $('.timeline-inner').show();
-                $('#control').show();
+                $('.timeline-date').show();
+                $('.timeline-bar').show();
             } else {
-                $('.timeline-inner').hide();
-                $('#control').hide();
+                $('.timeline-date').hide();
+                $('.timeline-bar').hide();
             }
         }
     }

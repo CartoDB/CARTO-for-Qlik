@@ -37,7 +37,7 @@ define(["general.services/media-tool/theme"], function (mediaTool) {
                     '  marker-fill: ' + markerFill + ';',
                     '  marker-opacity: ' + layout.markerOpacity + ';',
                     '}'].join('\n');
-                //if (trails) {
+                if (trails) {
                     css += [
                         '#layer::point2 {',
                         '  marker-width: ' + parseInt(layout.markerWidth / 2) + ';',
@@ -79,7 +79,7 @@ define(["general.services/media-tool/theme"], function (mediaTool) {
                         '  marker-opacity: 0.02;',
                         '}'
                     ].join('\n');
-               // }
+                }
                 if (torqueCategories) {
                     if (categoryNames) {
                         categoryNames = categoryNames.split(",");
@@ -92,7 +92,6 @@ define(["general.services/media-tool/theme"], function (mediaTool) {
                         if (categoryColors && categoryColors[i] != undefined) {
                             torqueCategory.color = categoryColors[i];
                         }
-                        torqueCategory.color = mediaTool.palette[i+6];
                         if (typeof(torqueCategory.value) == "number") {
                             css += '\n#layer[value=' + torqueCategory.value + '] { marker-fill: ' + torqueCategory.color + '; }';
                         } else {

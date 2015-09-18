@@ -1,5 +1,5 @@
 {
-	"name": "CartoQlik",
+	"name": "CartoDB for Qlik",
 	"description": "CartoDB Torque map with local data",
 	"icon": "map",
 	"type": "visualization",

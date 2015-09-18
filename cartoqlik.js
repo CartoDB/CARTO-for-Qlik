@@ -31,8 +31,8 @@ define(["./lib/leaflet", "./cartocss", "./config", "text!./cartodb.css", "text!.
     var updateSelections;
     var hideSpinner;
 
-    // Used when the extension reloads and want to keep the zoom level and position.
-    var forceMapView;
+    // Extension is called for the first time after page reload
+    var initialPageLoad = true;
 
     var dragging = false;
     
@@ -168,13 +168,6 @@ define(["./lib/leaflet", "./cartocss", "./config", "text!./cartodb.css", "text!.
                 // This takes care of narrowing the data filter on Qlik based on the current bounding box.
                 updateSelections = function () {
                     if ($("#dynamic_filter").is(':checked')) {
-                        var center = map.getCenter();
-                        forceMapView = {
-                            centerLat: center.lat,
-                            centerLon: center.lng,
-                            zoom: map.getZoom()
-                        }
-
                         var mapBounds = map.getBounds();
                         
                         var points = [];
@@ -320,21 +313,14 @@ define(["./lib/leaflet", "./cartocss", "./config", "text!./cartodb.css", "text!.
                 }
             });
 
-            // We keep track of configured lat, lon and zoom to only reset the map on Qlik editor changes, not if the user simply
-            // uses the map's controls.
-            if (forceMapView) {
-                mapOptions.centerLat = forceMapView.centerLat;
-                mapOptions.centerLon = forceMapView.centerLon;
-                mapOptions.zoom = forceMapView.zoom;
-                forceMapView = false;
-                map.setView([mapOptions.centerLat, mapOptions.centerLon], mapOptions.zoom);
-            } else if (!layout.zoom && !layout.centerLat && !layout.centerLon) {
-                map.fitBounds(dataBounds);
-            } else if (mapOptions.centerLat != layout.centerLat || mapOptions.centerLon != layout.centerLon || mapOptions.zoom != layout.zoom) {
-                mapOptions.centerLat = layout.centerLat;
-                mapOptions.centerLon = layout.centerLon;
-                mapOptions.zoom = layout.zoom;
-                map.setView([mapOptions.centerLat, mapOptions.centerLon], mapOptions.zoom);
+            // When loading for the first time, we need to either fit bounds or go to zomm/lat/lon as specified by the user in the menu.
+            if (initialPageLoad) {
+                initialPageLoad = false;
+                if (!layout.zoom && !layout.centerLat && !layout.centerLon) {
+                    map.fitBounds(dataBounds);
+                } else {
+                    map.setView([layout.centerLat, layout.centerLon], layout.zoom);
+                }
             }
 
             // Actually loading data into Torque.

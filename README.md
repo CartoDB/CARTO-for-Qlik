@@ -72,3 +72,9 @@ _CartoDB for Qlik_ can make use of 1 measure, depending on the type of map.
 * Initial zoom level, zero latitude and zero longitude: If set, the initial bounding box upon page reload will be taken from these values. If not set (or set to 0), the map will automatically fit its bounds.
 
 ![Advanced options](doc/advanced_options.png)
+
+## Area filter
+
+![Map style](doc/area_filter.png)
+
+When the area filter switch is enabled, data that falls out of the bounding box of the map is filtered out.

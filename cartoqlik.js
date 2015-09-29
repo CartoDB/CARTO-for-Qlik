@@ -266,7 +266,7 @@ define(["./lib/leaflet", "./cartocss", "./config", "text!./cartodb.css", "text!.
 
             torqueLayer = new L.TorqueLayer({
                 provider: 'internal',
-                loop: true,
+                loop: layout.loop,
                 steps: animated ? layout.steps : 1,
                 animationDuration: layout.animationDuration,
                 data_aggregation: layout.cumulative ? "cumulative" : undefined,
@@ -348,7 +348,14 @@ define(["./lib/leaflet", "./cartocss", "./config", "text!./cartodb.css", "text!.
             torqueLayer.provider.setReady();
 
             if (animated) {
-                torqueLayer.play();
+                if (layout.autoplay) {
+                    torqueLayer.play();
+                    $("#control span").removeClass("play");
+                    $("#control span").addClass("pause");
+                } else {
+                    $("#control span").removeClass("pause");
+                    $("#control span").addClass("play");
+                }
                 $('.timeline-date').show();
                 $('.timeline-bar').show();
             } else {

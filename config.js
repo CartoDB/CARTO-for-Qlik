@@ -42,6 +42,18 @@ define(function () {
                                     label: "Light"
                                 }],
                                 defaultValue: "dark"
+                            },
+                            autoplay: {
+                                ref: "autoplay",
+                                type: "boolean",
+                                label: "Autoplay",
+                                defaultValue: true
+                            },
+                            loop: {
+                                ref: "loop",
+                                type: "boolean",
+                                label: "Loop animations",
+                                defaultValue: true
                             }
                         }
                     },

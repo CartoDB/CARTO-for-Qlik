@@ -13,7 +13,7 @@ CartoQlik allows you to use CartoDB's Torque map rendering library on Qlik Sense
 
 ## Installation
 
-Copy the project folder under `<your HD unit>:\Users\<your user name>\Documents\Qlik\Sense\Extensions_`, you should now see the _CartoDB for Qlik_ extension on the charts tab.
+Copy the project folder under `<your HD unit>:\Users\<your user name>\Documents\Qlik\Sense\Extensions`, you should now see the _CartoDB for Qlik_ extension on the charts tab.
 
 ![Charts tab](doc/charts.png)
 

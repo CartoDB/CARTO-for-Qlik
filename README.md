@@ -1,8 +1,8 @@
-# CartoDB for Qlik
+# CARTO for Qlik
 
-_CartoDB's Torque maps on Qlik_
+_CARTO's Torque maps on Qlik_
 
-CartoQlik allows you to use CartoDB's Torque map rendering library on Qlik Sense.
+CartoQlik allows you to use CARTO's Torque map rendering library on Qlik Sense.
 
 ## Features
 
@@ -13,13 +13,13 @@ CartoQlik allows you to use CartoDB's Torque map rendering library on Qlik Sense
 
 ## Installation
 
-Copy the project folder under `<your HD unit>:\Users\<your user name>\Documents\Qlik\Sense\Extensions`, you should now see the _CartoDB for Qlik_ extension on the charts tab.
+Copy the project folder under `<your HD unit>:\Users\<your user name>\Documents\Qlik\Sense\Extensions`, you should now see the _CARTO for Qlik_ extension on the charts tab.
 
 ![Charts tab](doc/charts.png)
 
 ## Data
 
-_CartoDB for Qlik_ works with 2 dimensions and 1 measure:
+_CARTO for Qlik_ works with 2 dimensions and 1 measure:
 
 ### Dimensions
 
@@ -32,7 +32,7 @@ This is an example of a typical data import script, when it comes down to defini
 
 ### Measure
 
-_CartoDB for Qlik_ can make use of 1 measure, depending on the type of map.
+_CARTO for Qlik_ can make use of 1 measure, depending on the type of map.
 
 * For a category map, this measure defines the data column that will be used to categorize the map. This measure shouldn't be aggregated.
 

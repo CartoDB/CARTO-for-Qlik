@@ -1,8 +1,22 @@
-define(["general.services/media-tool/theme"], function (mediaTool) {
+define([], function () {
+    var palette = [
+        "#b0afae",
+        "#7b7a78",
+        "#545352",
+        "#4477aa",
+        "#7db8da",
+        "#b6d7ea",
+        "#46c646",
+        "#f93f17",
+        "#ffcf02",
+        "#276e27",
+        "#ffffff",
+        "#000000"
+    ];
     return {
         get: function (torqueType, layout, trails, torqueCategories, categoryNames, categoryColors) {
-            var markerFill = mediaTool.palette[layout.markerFill];
-            var borderColor = mediaTool.palette[layout.borderColor];
+            var markerFill = palette[layout.markerFill];
+            var borderColor = palette[layout.borderColor];
 
             if (torqueType == "heatmap") {
                 return [
